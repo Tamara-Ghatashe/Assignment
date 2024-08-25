@@ -45,14 +45,6 @@ config.services = [['appium', {
 // Reporters
 // ====================
 
-/*
-config.reporters = [
-  'spec',
-  ['@wdio/allure-reporter', {
-    outputDir: 'allure-results',
-    disableWebdriverStepsReporting: false,
-    disableWebdriverScreenshotsReporting: false,
-  }]
-];
-*/
+
+
 exports.config = config;
