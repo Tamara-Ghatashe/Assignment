@@ -1,44 +1,64 @@
 const axios = require('axios');
 
-
 describe('Test', () => {
-  const exheight=171;
-  const exweight=68;
+  const exheight = 171;
+  const exweight = 68;
   const exBloodType = 'O+';
-
-
-
+  const mobileNumber=962798365448;
+  const password = 123123;
+  let  mobileType;
 
   it('Login to the app', async () => {
     await $('~JO').click();
     await driver.pause(5000);
+    const isDisplayed = await $('~iosPermissionHeaderP1').isDisplayed();
+    if (isDisplayed) {
+      await $('~we_accept_subscribe_now').click();
+    }
+
+    if (isDisplayed === true) {
+      mobileType = 'ios';
+    } else {
+      mobileType = 'android';
+    }
+
     await $('~registerBtnText').click();
     await $('~SignIn').click();
-    await $('~email_login_user_txt').setValue("962798365448");
-    await $('~email_login_pass_txt').setValue("123123");
+    await $('~email_login_user_txt').setValue(mobileNumber);
+    await $('~registerText_1').click();
+    await driver.pause(5000);
+    await $('~email_login_pass_txt').setValue(password);
+    await $('~registerText_1').click();
     await $('~btn_loginBtnCTA').click();
     await expect($('~welcomeUserName')).toBeDisplayed();
   });
 
-
   it('Edit PHR Record Information', async () => {
-    await $('//android.view.ViewGroup[@resource-id="userImageBtn"]').click();
-    await $('~Phr').click();
-    await $('~phr_profile_label_personalInfo').click();
-    await $('~height_txt').setValue(exheight);
-    await $('~weight_txt').setValue(exweight);
+    await $('~tabbaritem_4').click();
+    await $('~ic_report').click();
+    await $('~ic_medical_card').click();
+
+    if (mobileType === 'android') {
+      await $('~height_txt').setValue(exheight);
+      await $('~weight_txt').setValue(exweight);
+    } else if (mobileType === 'ios') {
+      await $('~height_txt').setValue(0);
+      await $('~weight_txt').setValue(0);
+    }
     await $('~blood_type_txt').click();
-    await $('~alert_action_2').click();
-    await $('~profile_save_btn').click();
-    await $('//android.view.ViewGroup[@content-desc="alert_action_0"]').click();
+    await driver.pause(5000);
+    await $('~blood_type_txt').click();
+    await $('~alert_action_3').click();
+    await $('~btn_profile_save_btn').click();
+    await $('~alert_action_0').click();
   });
 
   it('Validate PHR Data', async () => {
     async function getUser() {
       try {
-        const response = await axios.get('https://api-stg.altibb.com/active/v1/phrs/29313626', {
+        const response = await axios.get('API_URL', {
           headers: {
-            'Authorization': 'Bearer oYKqtcwsnenbEO_vmsdMkxF1KeRc71WR'
+            'Authorization': 'BEARER_TOKEN'
           }
         });
 
